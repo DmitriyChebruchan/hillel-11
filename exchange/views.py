@@ -19,3 +19,7 @@ def main_view(request):
         ]
     }
     return JsonResponse(response_data)
+
+def exchange_window(request):
+    exchange_rates = []
+    return render(request, "exchange_window.html", exchange_rates)
