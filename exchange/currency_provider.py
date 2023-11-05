@@ -49,7 +49,8 @@ class MonoProvider(ProviderBase):
                 and currency["currencyCodeB"] == currency_to_code
             ):
                 value = SellBuy(
-                    sell=float(currency["rateSell"]), buy=float(currency["rateBuy"])
+                    sell=float(currency["rateSell"]),
+                    buy=float(currency["rateBuy"]),
                 )
                 return value
         raise RateNotFound(

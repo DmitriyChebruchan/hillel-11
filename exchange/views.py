@@ -1,5 +1,7 @@
 from django.http import JsonResponse
+from django.shortcuts import render
 
+from .forms import UserInputForm
 from .models import Rate
 
 
@@ -20,6 +22,12 @@ def main_view(request):
     }
     return JsonResponse(response_data)
 
+
 def exchange_window(request):
-    exchange_rates = []
-    return render(request, "exchange_window.html", exchange_rates)
+    currencies_from = ["USD", "EURO", "GBP"]
+    currencies_to = ["USD", "EURO", "GBP"]
+    form = UserInputForm(initial={'currencies_from': currencies_from,
+                                  'currencies_to': currencies_to})
+    info_dict = {'form': form}
+    print(form)
+    return render(request, "exchange_window.html", info_dict)
