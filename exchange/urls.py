@@ -19,8 +19,7 @@ from django.urls import path, include
 from exchange.views import main_view, exchange_window
 
 urlpatterns = [
-
     path("admin/", admin.site.urls),
     path("exchange-rates", main_view),
-    path("exchange-window", exchange_window)
+    path("exchange-window", exchange_window),
 ]

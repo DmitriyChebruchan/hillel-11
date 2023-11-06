@@ -6,4 +6,5 @@ from exchange.views import main_view
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("exchange-rates", main_view),
-    path("/", include('exchange.urls'))]
+    path("/", include("exchange.urls")),
+]

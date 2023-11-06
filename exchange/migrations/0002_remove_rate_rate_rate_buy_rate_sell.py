@@ -16,17 +16,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="rate",
             name="buy",
-            field=models.DecimalField(
-                decimal_places=4, default=0, max_digits=10
-            ),
+            field=models.DecimalField(decimal_places=4, default=0, max_digits=10),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name="rate",
             name="sell",
-            field=models.DecimalField(
-                decimal_places=4, default=0, max_digits=10
-            ),
+            field=models.DecimalField(decimal_places=4, default=0, max_digits=10),
             preserve_default=False,
         ),
     ]

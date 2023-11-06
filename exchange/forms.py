@@ -7,12 +7,15 @@ class UserInputForm(forms.Form):
     amount = forms.FloatField(label="Quantity", min_value=0, step_size=0.01)
 
     def __init__(self, *args, **kwargs):
-        initial_currencies = kwargs.pop('initial', None)
+        initial_currencies = kwargs.pop("initial", None)
         super(UserInputForm, self).__init__(*args, **kwargs)
         if initial_currencies:
-            currencies_from = [(currency, currency) for currency in
-                               initial_currencies['currencies_from']]
-            currencies_to = [(currency, currency) for currency in
-                             initial_currencies['currencies_to']]
-            self.fields['currency_from'].choices = currencies_from
-            self.fields['currency_to'].choices = currencies_to
+            currencies_from = [
+                (currency, currency)
+                for currency in initial_currencies["currencies_from"]
+            ]
+            currencies_to = [
+                (currency, currency) for currency in initial_currencies["currencies_to"]
+            ]
+            self.fields["currency_from"].choices = currencies_from
+            self.fields["currency_to"].choices = currencies_to
