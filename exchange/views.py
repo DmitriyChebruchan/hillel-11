@@ -25,11 +25,14 @@ def main_view(request):
 
 def exchange_window(request):
     # TODO: Method Post, grab information from sites
-    # if request.method("POST"):
     currencies_from = ["USD", "EURO", "GBP"]
     currencies_to = ["USD", "EURO", "GBP"]
     form = UserInputForm(initial={'currencies_from': currencies_from,
                                   'currencies_to': currencies_to})
     info_dict = {'form': form}
+    if request.method == "POST":
+        info_dict["quantity"] = 100
+        return render(request, "exchange_window.html", info_dict)
+
     print(form)
     return render(request, "exchange_window.html", info_dict)
