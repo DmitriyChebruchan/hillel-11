@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en" xmlns="">
 {% load bootstrap5 %}
@@ -13,17 +12,18 @@
 <body>
 <h1>Rate of exchange</h1>
 <div class="alert alert-info">
-  <span>Choose currency and put amount.</span>
+    <span>Choose currency and put amount.</span>
 </div>
-<form class = "form-group" method="POST">
+<form class="form-group" method="POST">
     {% csrf_token %}
     <p>{{ form.as_p }}</p>
     <input class="btn-primary" type="submit" value="Calculate">
 </form>
 
 {% if quantity %}
-    <p>Result is {{ quantity }}</p>
+<p>Result is {{ quantity }}</p>
 {% endif %}
+
 
 </body>
 </html>

@@ -28,11 +28,17 @@ def exchange_window(request):
     currencies_from = ["USD", "EURO", "GBP"]
     currencies_to = ["USD", "EURO", "GBP"]
     form = UserInputForm(
-        initial={"currencies_from": currencies_from, "currencies_to": currencies_to}
+        initial={
+            "currencies_from": currencies_from,
+            "currencies_to": currencies_to,
+        }
     )
     info_dict = {"form": form}
     if request.method == "POST":
-        info_dict["quantity"] = 100
+        lowest_rate = 2
+        # revise below
+        # posted_form = UserInputForm(request.POST)
+        # info_dict["quantity"] = posted_form.cleaned_data["amount"] * lowest_rate
         return render(request, "exchange_window.html", info_dict)
 
     print(form)
