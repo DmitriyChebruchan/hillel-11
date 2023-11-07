@@ -23,7 +23,9 @@ def pull_rate():
             date=date,
         )
         if not eur.exists():
-            print("Record for EUR and", provider_eur.name, "not found, creating.")
+            print(
+                "Record for EUR and", provider_eur.name, "not found, creating."
+            )
             euro_rate = provider_eur.get_rate()
             eur = Rate.objects.create(
                 currency_from="EUR",
@@ -45,7 +47,9 @@ def pull_rate():
             date=date,
         )
         if not usd.exists():
-            print("Record for USD and", provider_usd.name, "not found, creating.")
+            print(
+                "Record for USD and", provider_usd.name, "not found, creating."
+            )
 
             usd_rate = provider_usd.get_rate()
             usd = Rate.objects.create(

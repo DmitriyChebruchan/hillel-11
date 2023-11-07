@@ -1,4 +1,5 @@
 import dataclasses
+import json
 from abc import ABC, abstractmethod
 
 import requests
@@ -54,7 +55,8 @@ class MonoProvider(ProviderBase):
                 )
                 return value
         raise RateNotFound(
-            f"Cannot find rate from {self.currency_from} to {self.currency_to} in provider {self.name}"
+            f"Cannot find rate from {self.currency_from} to "
+            + f"{self.currency_to} in provider {self.name}"
         )
 
 
@@ -79,4 +81,57 @@ class PrivatbankProvider(ProviderBase):
         )
 
 
-PROVIDERS = [MonoProvider, PrivatbankProvider]
+class VKurseProvider(ProviderBase):
+    name = "vkurse"
+    rates_decoder = {"Dollar": "USD", "Euro": "EURO"}
+
+    def get_rate(self) -> SellBuy:
+        """Collects rates from internet"""
+
+        url = "https://vkurse.dp.ua/course.json"
+
+        # making request
+        response = requests.get(url)
+        response.raise_for_status()
+        rates = json.loads(response.json())
+
+        # changing namings
+        filtered_rates = self.normalizing_rates(rates)
+
+        # assigning Sell and Buy
+        for currency in filtered_rates:
+            value = SellBuy(
+                buy=float(currency["buy"]), sell=float(currency["sale"])
+            )
+            return value
+        raise RateNotFound(
+            f"Cannot find rate from {self.currency_from} to "
+            + f"{self.currency_to} in provider {self.name}"
+        )
+
+    def normalizing_rates(self, rates):
+        """Renames, filters rates to class standards"""
+
+        updated_rates = [
+            {"rate_name": rate_name, "rate_value": rates[rate_name]}
+            for rate_name in rates
+        ]
+        # renaming
+        renamed_rates = [
+            {
+                "rate_name": self.rates_decoder.get(rate["rate_name"], "N/A"),
+                "rate_value": rate["rate_value"],
+            }
+            for rate in [
+                {"rate_name": rate_name, "rate_value": rates[rate_name]}
+                for rate_name in rates
+            ]
+        ]
+        # filtering rates
+        filtered_rates = [
+            rate for rate in renamed_rates if rate["rate_name"] != "N/A"
+        ]
+        return filtered_rates
+
+
+PROVIDERS = [MonoProvider, PrivatbankProvider, VKurseProvider]

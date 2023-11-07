@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body>
+<body style="padding: 0px 5px">
 <h1>Rate of exchange</h1>
 <div class="alert alert-info">
     <span>Choose currency and put amount.</span>
@@ -21,9 +21,12 @@
 </form>
 
 {% if quantity %}
-<p>Result is {{ quantity }}</p>
+<h2>Result is {{ quantity }}</h2>
 {% endif %}
 
+{% if errors %}
+{{ errors }}
+{% endif %}
 
 </body>
 </html>
