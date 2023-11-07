@@ -1,14 +1,14 @@
 import dataclasses
-import json
 from abc import ABC, abstractmethod
+from typing import Optional
 
 import requests
 
 
 @dataclasses.dataclass
 class SellBuy:
-    sell: float
-    buy: float
+    sell: Optional[float]
+    buy: Optional[float]
 
 
 class RateNotFound(Exception):
@@ -77,61 +77,64 @@ class PrivatbankProvider(ProviderBase):
                 )
                 return value
         raise RateNotFound(
-            f"Cannot find rate from {self.currency_from} to {self.currency_to} in provider {self.name}"
+            f"Cannot find rate from {self.currency_from} to"
+            + f" {self.currency_to} in provider {self.name}"
         )
 
 
 class VKurseProvider(ProviderBase):
     name = "vkurse"
-    rates_decoder = {"Dollar": "USD", "Euro": "EURO"}
 
     def get_rate(self) -> SellBuy:
-        """Collects rates from internet"""
-
         url = "https://vkurse.dp.ua/course.json"
-
-        # making request
         response = requests.get(url)
         response.raise_for_status()
-        rates = json.loads(response.json())
 
-        # changing namings
-        filtered_rates = self.normalizing_rates(rates)
-
-        # assigning Sell and Buy
-        for currency in filtered_rates:
+        if self.currency_from == "USD":
             value = SellBuy(
-                buy=float(currency["buy"]), sell=float(currency["sale"])
+                buy=float(response.json()["Dollar"]["buy"]),
+                sell=float(response.json()["Dollar"]["sale"]),
             )
-            return value
+        elif self.currency_from == "EUR":
+            value = SellBuy(
+                buy=float(response.json()["Euro"]["buy"]),
+                sell=float(response.json()["Euro"]["sale"]),
+            )
+        else:
+            raise RateNotFound(
+                f"Cannot find rate for {self.currency_from} "
+                + f"in provider {self.name}"
+            )
+        return value
+
+
+class BankOrgProvider(ProviderBase):
+    name = "bank_org"
+
+    iso_from_country_code = {
+        "UAH": 980,
+        "USD": 840,
+        "EUR": 978,
+    }
+
+    def get_rate(self) -> SellBuy:
+        url = (
+            "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json"
+        )
+        response = requests.get(url)
+        response.raise_for_status()
+
+        for currency in response.json():
+            if currency["cc"] == self.currency_from:
+                value = SellBuy(
+                    sell=None,
+                    buy=float(currency["rate"]),
+                )
+                return value
         raise RateNotFound(
             f"Cannot find rate from {self.currency_from} to "
             + f"{self.currency_to} in provider {self.name}"
         )
-
-    def normalizing_rates(self, rates):
-        """Renames, filters rates to class standards"""
-
-        updated_rates = [
-            {"rate_name": rate_name, "rate_value": rates[rate_name]}
-            for rate_name in rates
-        ]
-        # renaming
-        renamed_rates = [
-            {
-                "rate_name": self.rates_decoder.get(rate["rate_name"], "N/A"),
-                "rate_value": rate["rate_value"],
-            }
-            for rate in [
-                {"rate_name": rate_name, "rate_value": rates[rate_name]}
-                for rate_name in rates
-            ]
-        ]
-        # filtering rates
-        filtered_rates = [
-            rate for rate in renamed_rates if rate["rate_name"] != "N/A"
-        ]
-        return filtered_rates
 
 
 PROVIDERS = [MonoProvider, PrivatbankProvider, VKurseProvider]
