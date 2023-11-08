@@ -5,7 +5,7 @@ class UserInputForm(forms.Form):
     choices = [("USD", "USD"), ("GBP", "GBP"), ("EUR", "EUR")]
     currency_from = forms.ChoiceField(label="Currency from", choices=choices)
     currency_to = forms.ChoiceField(label="Currency to", choices=choices)
-    amount = forms.FloatField(label="Quantity", min_value=0, step_size=0.01)
+    amount = forms.FloatField(label="Quantity", min_value=0, step_size=0.1)
 
     def __init__(self, *args, **kwargs):
         initial_currencies = kwargs.pop("initial", None)

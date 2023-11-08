@@ -7,9 +7,9 @@ def result_calculator(posted_form):
 
 def info_dict_generator(curr_from=None, curr_to=None):
     if curr_to is None:
-        curr_to = ["USD", "EURO", "GBP"]
+        curr_to = ["USD", "EUR", "GBP"]
     if curr_from is None:
-        curr_from = ["USD", "EURO", "GBP"]
+        curr_from = ["USD", "EUR", "GBP"]
 
     currencies_from = currency_normalizer(curr_from)
     currencies_to = currency_normalizer(curr_to)
