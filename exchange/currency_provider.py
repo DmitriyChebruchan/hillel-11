@@ -108,14 +108,8 @@ class VKurseProvider(ProviderBase):
         return value
 
 
-class BankOrgProvider(ProviderBase):
-    name = "bank_org"
-
-    iso_from_country_code = {
-        "UAH": 980,
-        "USD": 840,
-        "EUR": 978,
-    }
+class BankGovProvider(ProviderBase):
+    name = "bank_gov"
 
     def get_rate(self) -> SellBuy:
         url = (
@@ -137,4 +131,34 @@ class BankOrgProvider(ProviderBase):
         )
 
 
-PROVIDERS = [MonoProvider, PrivatbankProvider, VKurseProvider]
+class MinFinProvider(ProviderBase):
+    name = "minfin"
+
+    def get_rate(self) -> SellBuy:
+        url = "https://api.minfin.com.ua/mb/7f61725a26a4c90d440f2fa0d50cfa1a"
+        response = requests.get(url)
+        response.raise_for_status()
+
+        for currency in response.json():
+            if (
+                currency["currency"].lower() == self.currency_to.lower()
+                and currency["currency"].lower() == self.currency_from.lower()
+            ):
+                value = SellBuy(
+                    sell=float(currency["ask"]),
+                    buy=float(currency["bid"]),
+                )
+                return value
+        raise RateNotFound(
+            f"Cannot find rate from {self.currency_from} to "
+            + f"{self.currency_to} in provider {self.name}"
+        )
+
+
+PROVIDERS = [
+    MonoProvider,
+    PrivatbankProvider,
+    VKurseProvider,
+    MinFinProvider,
+    BankGovProvider,
+]
