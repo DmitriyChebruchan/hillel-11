@@ -135,7 +135,7 @@ class MinFinProvider(ProviderBase):
     name = "minfin"
 
     def get_rate(self) -> SellBuy:
-        url = "https://api.minfin.com.ua/mb/7f61725a26a4c90d440f2fa0d50cfa1a"
+        url = "https://api.minfin.com.ua/mb/113034f214e94c9cc053e8a498afb02e47a1c1f8/"
         response = requests.get(url)
         response.raise_for_status()
 
