@@ -28,7 +28,7 @@ class ProviderBase(ABC):
 
 
 class MonoProvider(ProviderBase):
-    name = "monobank"
+    name = "Monobank"
 
     iso_from_country_code = {
         "UAH": 980,
@@ -61,7 +61,7 @@ class MonoProvider(ProviderBase):
 
 
 class PrivatbankProvider(ProviderBase):
-    name = "privatbank"
+    name = "PrivatBank"
 
     def get_rate(self) -> SellBuy:
         url = "https://api.privatbank.ua/p24api/pubinfo?exchange&coursid=5"
@@ -135,7 +135,11 @@ class MinFinProvider(ProviderBase):
     name = "minfin"
 
     def get_rate(self) -> SellBuy:
-        url = "https://api.minfin.com.ua/mb/113034f214e94c9cc053e8a498afb02e47a1c1f8/"
+        url = (
+            "https://api.minfin.com.ua/mb/113034f214e94c9cc05"
+            + "3e8a498afb02e47a1c1f8/"
+        )
+
         response = requests.get(url)
         response.raise_for_status()
 

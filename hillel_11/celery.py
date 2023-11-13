@@ -1,5 +1,4 @@
 import os
-import time
 
 from celery import Celery
 from celery.schedules import crontab
@@ -25,14 +24,3 @@ app.conf.beat_schedule = {
         "schedule": crontab(minute="0", hour="0"),
     },
 }
-
-
-@app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(3.0, debug_task, name="add every 5")
-
-
-@app.task(bind=True, ignore_result=True)
-def debug_task(self):
-    print(f"request{self.request!r}")
-    print(f"Current time stamp ", (time.time()))

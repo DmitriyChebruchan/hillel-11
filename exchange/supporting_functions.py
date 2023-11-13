@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.utils import timezone
 
 from exchange.forms import UserInputForm
@@ -8,30 +7,31 @@ from exchange.models import Rate
 def result_calculator(posted_form):
     required_currency_to = posted_form.cleaned_data["currency_to"]
 
-    # rates = (
-    #     Rate.objects.filter(date=timezone.now().date()).order_by("sell").first()
-    # )
-    # to do CORRECT BELOW LOWERS RATE
     lowest_rate = (
         Rate.objects.filter(
             date=timezone.now().date(),
-            currency_to=required_currency_to,
+            currency_from=required_currency_to,
         )
         .order_by("sell")
         .first()
     )
+    provider = lowest_rate.provider
 
     if not lowest_rate:
-        print("Not lowest_rate")
-        return HttpResponse("No rate is found today")
+        print("No lowest_rate found.")
+        return "No rate is found today."
 
-    result = str(
-        round(
-            float(posted_form.cleaned_data["amount"]) * float(lowest_rate.sell),
-            2,
-        )
+    required_amount = posted_form.cleaned_data["amount"]
+    result_amount = round(
+        float(required_amount) * float(lowest_rate.sell),
+        2,
     )
 
+    result = (
+        f"To buy {required_amount} of {required_currency_to} "
+        + f"you will need {result_amount} of UAH. The provider is "
+        f'"{provider}".'
+    )
     return result
 
 

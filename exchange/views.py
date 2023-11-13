@@ -6,6 +6,9 @@ from .models import Rate
 from .supporting_functions import result_calculator, info_dict_generator
 
 
+def main_menu(request):
+    return render(request, "main_menu.html")
+
 def main_view(request):
     """View showing rate of exchange"""
 
@@ -33,7 +36,7 @@ def exchange_window(request):
     if request.method == "POST":
         posted_form = UserInputForm(request.POST)
         if posted_form.is_valid():
-            info_dict["quantity"] = result_calculator(posted_form)
+            info_dict["result"] = result_calculator(posted_form)
         else:
             info_dict["errors"] = posted_form.errors
         return render(request, "exchange_window.html", info_dict)

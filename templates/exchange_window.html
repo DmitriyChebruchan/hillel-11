@@ -10,7 +10,7 @@
     <title>Document</title>
 </head>
 <body style="padding: 0px 5px">
-<h1>Rate of exchange</h1>
+<h1 class="h1">Rate of exchange</h1>
 <div class="alert alert-info">
     <span>Choose currency and put amount.</span>
 </div>
@@ -20,8 +20,8 @@
     <input class="btn-primary" type="submit" value="Calculate">
 </form>
 
-{% if quantity %}
-<h2>Result is {{ quantity }}</h2>
+{% if result %}
+<h2>{{ result }}</h2>
 {% endif %}
 
 {% if errors %}
@@ -29,4 +29,5 @@
 {% endif %}
 
 </body>
+
 </html>
